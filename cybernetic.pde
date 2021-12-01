@@ -24,6 +24,8 @@ Actor[] a;
 int numPoints = pWidth * pHeight/100;
 int speed = 1;
 float vecImpact = 0.01;
+int ageCounter = 0;
+int defaultAge = 200;
 
 void setup() {
   size(800, 800);
@@ -45,7 +47,7 @@ void setup() {
     float y = (int(i / numPts1D)) * (pHeight/numPts1D);
     a[i] = new Actor(vectors, x, y);
   }
-  background(0);
+  background(255);
 
   //kinect setting
   kinect2 = new Kinect2(this);
@@ -187,6 +189,7 @@ void draw() {
   //  }
   //}
   // update the points
+  ageCounter++;
   for (int i = 0; i < numPoints; i++) {
     a[i].update();
   }
