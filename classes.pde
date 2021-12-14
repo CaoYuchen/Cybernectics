@@ -2,7 +2,7 @@ class Vector {
   float x, y;
   Vector(int i,int j) {
     // divide by 100 makes the noise finer and the height/width offset gives them new values
-    x = (noise((i/100)+width,(j/100)+height)-0.5)*speed;
+    x = (noise((i/100)+pWidth,(j/100)+pHeight)-0.5)*speed;
     y = (noise((i/100),(j/100))-0.5)*speed;
   }
 }
@@ -14,8 +14,8 @@ class Actor {
   Actor(Vector[][] array, float xinit, float yinit) {
     //xpos = xinit;
     //ypos = yinit;
-    xpos = random(0,width);
-    ypos = random(0,height);
+    xpos = random(0,pWidth);
+    ypos = random(0,pHeight);
     vectors = array;
     xspeed = vectors[int(xpos)][int(ypos)].x;
     yspeed = vectors[int(xpos)][int(ypos)].y;
@@ -38,10 +38,10 @@ class Actor {
   void move() {
     xpos = lives[(ageCounter - 1) % defaultAge][0] + xspeed*10;
     ypos = lives[(ageCounter - 1) % defaultAge][1] + yspeed*10;
-    if (int(xpos) >= width) xpos = 0;
-    if (int(xpos) < 0) xpos = width-1;
-    if (int(ypos) >= height) ypos = 0;
-    if (int(ypos) < 0) ypos = height-1;
+    if (int(xpos) >= pWidth) xpos = 0;
+    if (int(xpos) < 0) xpos = pWidth-1;
+    if (int(ypos) >= pHeight) ypos = 0;
+    if (int(ypos) < 0) ypos = pHeight-1;
     lives[ageCounter % defaultAge][0] = xpos;
     lives[ageCounter % defaultAge][1] = ypos;
     //xpos += xspeed*10;
