@@ -20,6 +20,7 @@ PImage registered;
 float[] projectorMatrix;
 ArrayList<Contour> contours;
 ArrayList<PVector> center;
+int contourSize = 50;
 
 //vector field related
 Vector[][] vectors;

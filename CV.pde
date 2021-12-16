@@ -46,7 +46,7 @@ void contour(){
     //contour.draw();
     stroke(255, 0, 0);
     beginShape();
-    if (contour.area()>max_area*contourT && contour.area()<kinect2.depthWidth*kinect2.depthHeight*sigma) {
+    if (contour.area()>max_area*contourT && contour.area()<kinect2.depthWidth*kinect2.depthHeight*sigma && contour.getPoints().size()>contourSize) {
       for (PVector point : contour.getPoints()) {
         vertex(point.x/kinect2.depthWidth*pWidth, point.y/kinect2.depthHeight*pHeight);
         //vertex(point.x, point.y);
@@ -63,7 +63,7 @@ void contour(){
   for (Contour contour : contours) {
     PVector average = new PVector(0, 0);
     //PVector averageDraw = new PVector(0, 0);
-    if (contour.getPolygonApproximation().area()>max_area*contourT && contour.getPolygonApproximation().area()<kinect2.depthWidth*kinect2.depthHeight*sigma) {
+    if (contour.getPolygonApproximation().area()>max_area*contourT && contour.getPolygonApproximation().area()<kinect2.depthWidth*kinect2.depthHeight*sigma && contour.getPoints().size()>contourSize) {
       Rectangle bbox = contour.getBoundingBox();
       average.x = bbox.x+0.5*bbox.width;
       average.y = bbox.y+0.5*bbox.height;
@@ -102,7 +102,7 @@ void contour(){
   //arrayCopy(vectors_backup,vectors);
   int ii = 0;
   for (Contour contour : contours) {
-    if (contour.area()>max_area*contourT && contour.area()<kinect2.depthWidth*kinect2.depthHeight*sigma) {
+    if (contour.area()>max_area*contourT && contour.area()<kinect2.depthWidth*kinect2.depthHeight*sigma && contour.getPoints().size()>contourSize) {
       for (PVector point : contour.getPoints()) {
         //PVector p = new PVector(point.x, point.y);
         //PVector p = depthMap[(int)point.x+(int)point.y*kinect2.depthWidth];
@@ -114,13 +114,23 @@ void contour(){
         int x = round(point.x/kinect2.depthWidth*pWidth);
         int y = round(point.y/kinect2.depthHeight*pHeight);
         //println("x: " + x + " y: " + y);
-        if (x>=0 && x<pWidth && y>=0 && y<pHeight) {
+        if (x>=0 && x<pWidth && y>=0 && y<pHeight && center.size()>=ii+1) {
           //println("find the target");
-          float sum = sqrt(pow(x-center.get(ii).x,2)+pow(y-center.get(ii).y,2));
-          vectors[x][y].x = -(x-center.get(ii).x)/sum;
-          vectors[x][y].y = -(y-center.get(ii).y)/sum;
-          vecChange.add(new PVector(x,y));
+          //float sum = sqrt(pow(x-center.get(ii).x,2)+pow(y-center.get(ii).y,2));
+          //vectors[x][y].x = -(x-center.get(ii).x)/sum;
+          //vectors[x][y].y = -(y-center.get(ii).y)/sum;
+          //vecChange.add(new PVector(x,y));
           //line(x,y,center.get(ii).x,center.get(ii).y);
+          int kernalSize = 2;
+          for (int i = -kernalSize; i <= kernalSize; i++) {
+            for (int j = -kernalSize; j <= kernalSize; j++) {
+              if (x+i >= 0 && x+i < pWidth && y+j >= 0 && y+j < pHeight) {
+               vectors[x+i][y+j].x = (-i/kernalSize);
+               vectors[x+i][y+j].y = (-j/kernalSize);
+               vecChange.add(new PVector(x+i,y+j));
+              }
+          }
+  }
         }
       }
       ii++;
