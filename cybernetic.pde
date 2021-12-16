@@ -108,7 +108,9 @@ void draw() {
   //for (int i = 0; i < numPoints; i++) {
   //  a[i].update();
   //}
-  resetVec();
+  if (ageCounter % 40 == 0) {
+    resetVec();
+  }
   //println("xpos: "+a[1000].xpos+"; ypos: "+ a[1000].ypos);
   //println("v.x: "+vectors[30][30].x+"; v.y: "+ vectors[30][30].y);
 }
