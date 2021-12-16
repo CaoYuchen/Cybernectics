@@ -1,3 +1,5 @@
+import java.util.*; //<>//
+import java.awt.Rectangle;
 import org.openkinect.processing.*; //<>// //<>// //<>// //<>// //<>//
 import gab.opencv.*;
 import org.openkinect.freenect.*;
@@ -21,7 +23,8 @@ ArrayList<PVector> center;
 
 //vector field related
 Vector[][] vectors;
-Vector[][] vectors_backup;
+Vector[][] vectorRef;
+ArrayList<PVector> vecChange = new ArrayList<PVector>();
 Actor[] a;
 int numPoints = pWidth * pHeight/100;
 int speed = 1;
@@ -39,9 +42,11 @@ void setup() {
   noiseSeed(int(random(0, 1000)));
   noiseDetail(3);    
   vectors = new Vector[pWidth][pHeight];
+  vectorRef = new Vector[pWidth][pHeight];
   for (int i = 0; i < pWidth; i++) {
     for (int j = 0; j < pHeight; j++) {
       vectors[i][j] = new Vector(i, j);
+      vectorRef[i][j] = new Vector(i,j);
     }
   }
   int numPts1D = floor(sqrt(numPoints));
@@ -88,7 +93,7 @@ void draw() {
   //opticalflow();
   contour();
 
-
+  mouseUpdate();
   //comment out to see vector lines
   for (int i = 0; i < pWidth; i+= 20) {
     for (int j = 0; j < pHeight; j+=20) {
@@ -99,10 +104,11 @@ void draw() {
   }
   
   // update the points
-  //ageCounter++;
+  ageCounter++;
   //for (int i = 0; i < numPoints; i++) {
   //  a[i].update();
   //}
+  resetVec();
   //println("xpos: "+a[1000].xpos+"; ypos: "+ a[1000].ypos);
   //println("v.x: "+vectors[30][30].x+"; v.y: "+ vectors[30][30].y);
 }
@@ -110,9 +116,9 @@ void draw() {
 void keyPressed() {
   if (key == ' ') {
     noiseSeed(int(random(0,1000)));
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        vectors[i][j].x = (noise((i/100)+width,(j/100)+height)-0.5)*speed;
+    for (int i = 0; i < pWidth; i++) {
+      for (int j = 0; j < pHeight; j++) {
+        vectors[i][j].x = (noise((i/100)+pWidth,(j/100)+pHeight)-0.5)*speed;
         vectors[i][j].y = (noise((i/100),(j/100))-0.5)*speed;
       }
     }
@@ -125,9 +131,10 @@ void mouseUpdate() {
   int mY = mouseY;
   for (int i = -kernalSize; i <= kernalSize; i++) {
     for (int j = -kernalSize; j <= kernalSize; j++) {
-      if (mX+i >= 0 && mX+i < width && mY+j >= 0 && mY+j < height) {
+      if (mX+i >= 0 && mX+i < pWidth && mY+j >= 0 && mY+j < pHeight) {
        vectors[mX+i][mY+j].x = (-i/kernalSize);
        vectors[mX+i][mY+j].y = (-j/kernalSize);
+       vecChange.add(new PVector(mX+i,mY+j));
       }
     }
   }

@@ -74,3 +74,13 @@ class Actor {
 //    loc[0] = x;
 //    loc[1] = y;
 //    age = 0;
+
+void resetVec() {
+  ListIterator<PVector> vecChangeInterator = vecChange.listIterator();
+    while (vecChangeInterator.hasNext()) {
+      PVector cur = vecChangeInterator.next();
+      vectors[int(cur.x)][int(cur.y)].x = vectorRef[int(cur.x)][int(cur.y)].x;
+      vectors[int(cur.x)][int(cur.y)].y = vectorRef[int(cur.x)][int(cur.y)].y;
+  }
+  vecChange.clear();
+}
