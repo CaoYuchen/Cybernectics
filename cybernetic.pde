@@ -6,8 +6,8 @@ import org.openkinect.freenect.*;
 import org.openkinect.freenect2.*;
 
 // depends on projector's resolution
-int pWidth = 1920;
-int pHeight = 1080; 
+int pWidth = 960;
+int pHeight = 540; 
 
 //kinect related
 String calibFile ="/Users/joshuarain/Documents/Processing/libraries/KinectProjectorToolkit/examples/CALIBRATION/data/calibration.txt";
@@ -20,14 +20,14 @@ PImage registered;
 float[] projectorMatrix;
 ArrayList<Contour> contours;
 ArrayList<PVector> center;
-int contourSize = 50;
+int contourSize = 30;
 
 //vector field related
 Vector[][] vectors;
 Vector[][] vectorRef;
 ArrayList<PVector> vecChange = new ArrayList<PVector>();
 Actor[] a;
-int numPoints = pWidth * pHeight/100;
+int numPoints = pWidth * pHeight/30;
 int speed = 1;
 float vecImpact = 0.01;
 int ageCounter = 0;
@@ -84,31 +84,32 @@ void draw() {
   
   //mirror();
 
-  opencv.loadImage(registered);
+  opencv.loadImage(stream);
   opencv.erode();
   opencv.gray();
   //opencv.threshold(50);
   //image(opencv.getOutput(),800,0);
+  //image(stream,0,0);
 
 
   //opticalflow();
   contour();
 
-  mouseUpdate();
+  //mouseUpdate();
   //comment out to see vector lines
-  for (int i = 0; i < pWidth; i+= 20) {
-    for (int j = 0; j < pHeight; j+=20) {
-      strokeWeight(1);
-      stroke(0);
-      line(i,j,(i+vectors[i][j].x*10),(j+vectors[i][j].y*10));
-    }
-  }
+  //for (int i = 0; i < pWidth; i+= 20) {
+  //  for (int j = 0; j < pHeight; j+=20) {
+  //    strokeWeight(1);
+  //    stroke(0);
+  //    line(i,j,(i+vectors[i][j].x*10),(j+vectors[i][j].y*10));
+  //  }
+  //}
   
   // update the points
   ageCounter++;
-  //for (int i = 0; i < numPoints; i++) {
-  //  a[i].update();
-  //}
+  for (int i = 0; i < numPoints; i++) {
+    a[i].update();
+  }
   if (ageCounter % 40 == 0) {
     resetVec();
   }
